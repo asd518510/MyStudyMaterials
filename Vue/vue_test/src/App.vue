@@ -1,110 +1,62 @@
 <template>
-  <div id="root">
-    <div class="todo-container">
-      <div class="todo-wrap">
-        <LyHeader :addTodo="addTodo" />
-        <LyList :todos="todos"
-                :checkTodo="checkTodo"
-                :deleteTodo="deleteTodo" />
-        <LyFooter :todos="todos"
-                  :checkAllTodo="checkAllTodo"
-                  :clearAllTodo="clearAllTodo" />
-      </div>
-    </div>
+  <div class="app">
+    <h1>{{msg}},学生姓名是：{{studentName}}</h1>
+
+    <!--通过父组件给子组件传递函数类型的props实现：子给父传递数据-->
+    <School :getSchoolName="getSchoolName"></School>
+
+    <!--通过父组件给子组件绑定一个自定义事件实现：子给父传递数据(第一种写法：使用@或v-on)-->
+    <!-- <Student @studyTest="getStudetName" @demo="m1"></Student> -->
+    
+    <!--通过父组件给子组件绑定一个自定义事件实现：子给父传递数据(第二种写法：使用ref)-->
+    <Student ref="student" @click.native="show"/>
   </div>
 </template>
 
 <script>
-import LyHeader from './components/LyHeader.vue'
-import LyList from './components/LyList.vue'
-import LyFooter from './components/LyFooter.vue'
+import School from './components/School.vue'
+import Student from './components/Student.vue'
+
 
 export default {
   name: 'App',
   components: {
-    LyHeader,
-    LyList,
-    LyFooter
+    School,
+    Student,
   },
   data() {
     return {
-      todos: [
-        { id: '0001', title: '吃饭', done: true },
-        { id: '0002', title: '睡觉', done: false },
-        { id: '0003', title: '游戏人间', done: false }
-      ]
+        msg:'你好啊！',
+        studentName:''
     }
   },
   methods: {
-    //添加一个todo
-    addTodo(x) {
-      this.todos.unshift(x)
+    getSchoolName(name){
+        console.log('App收到学校名：',name)
     },
-    //勾选or取消勾选一个todo
-    checkTodo(id) {
-      this.todos.forEach((todo) => {
-        if (todo.id == id) todo.done = !todo.done
-      })
+    getStudetName(name,...params){
+        console.log('App收到学生名：',name,params)
+        this.studentName=name
     },
-    //删除一个todo
-    deleteTodo(id) {
-      this.todos = this.todos.filter((todo) => {
-        return todo.id !== id
-      })
+    m1(){
+        console.log('demo事件被触发了！')
     },
-    //全选or取消全选
-    checkAllTodo(done) {
-      this.todos.forEach((todo) => {
-        todo.done = done
-      })
-    },
-    //清除所有已经完成的todo
-    clearAllTodo() {
-      this.todos = this.todos.filter((todo) => {
-        return !todo.done
-      })
+    show(){
+        alert(123)
     }
-  }
+  },
+  mounted() {
+    // setTimeout(()=>{
+        this.$refs.student.$on('studyTest',this.getStudetName)
+    // },3000)
+    // this.$refs.student.$once('studyTest',this.getStudetName)//绑定自定义事件（一次性）
+  },
 }
 </script>
 
-<style>
-/*base*/
-body {
-  background: #fff;
-}
-.btn {
-  display: inline-block;
-  padding: 4px 12px;
-  margin-bottom: 0;
-  font-size: 14px;
-  line-height: 20px;
-  text-align: center;
-  vertical-align: middle;
-  cursor: pointer;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2),
-    0 1px 2px rgba(0, 0, 0, 0.05);
-  border-radius: 4px;
-}
-.btn-danger {
-  color: #fff;
-  background-color: #da4f49;
-  border: 1px solid #bd362f;
-}
-.btn-danger:hover {
-  color: #fff;
-  background-color: #bd362f;
-}
-.btn:focus {
-  outline: none;
-}
-.todo-container {
-  width: 600px;
-  margin: 0 auto;
-}
-.todo-container .todo-wrap {
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-}
+<style scoped>
+    .app{
+        background-color: gray;
+        padding: 5px;
+    }
 </style>

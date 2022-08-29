@@ -171,3 +171,10 @@
     2. LocalStorage 存储的内容，需要手动清除才会消失。
     3. `xxxxxStorage.getItem(xxx)`如果 xxx 对应的 value 获取不到，那么 getItem 的返回值是 null。
     4. `JSON.parse(null)`的结果依然是 null。
+## 组件的自定义事件
+1. 一种组件间通信的方式，适用于：子组件===>父组件
+2. 使用场景：A是父组件，B是子组件，B想给A传数据，那么就要在A中给B绑定自定义事件（事件的回调在A中）。
+3. 绑定自定义事件：
+ 1. 第一种方式，在父组件中：<Demo @studyTest="test" />或<Demo v-on:studyTest="test" />
+ 2. 第二种方式，在父组件中：
+    <Demo ref="test" />
